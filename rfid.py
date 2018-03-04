@@ -27,7 +27,7 @@ top = None
 window = None
 
 
-db = DataBase()        
+db = DataBase("localhost","rfid","password","userData" )        
         
 # --------------------------------------------------- #
 

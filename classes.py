@@ -45,8 +45,8 @@ class Led:
 # --------------------------------------------------- #
 
 class DataBase:
-    def __init__(self):
-        self.db = MySQLdb.connect("localhost","rfid","password","userData" )
+    def __init__(self, localhost, user, password, database):
+        self.db = MySQLdb.connect(localhost, user, password, database)
         self.cursor = self.db.cursor()
 
     def close(self):
