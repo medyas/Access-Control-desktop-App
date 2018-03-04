@@ -70,4 +70,7 @@ db = DataBase("localhost","rfid","password","userData" )
 
 add data to the employees tables with the RFID card reference and when it's launched everything should work.
 
-![Alt imgs](/imgs/Desktop-WaitingForUserScan.PNG?raw=true "Title")
+![Alt imgs](Desktop-WaitingForUserScan.PNG?raw=true "Title")
+![Alt imgs](Desktop-userAccess.PNG?raw=true "Title")
+![Alt imgs](Desktop-UserBlockedFromAccess.PNG?raw=true "Title")
+![Alt imgs](Desktop-ScanedCardNotRecognized.PNG?raw=true "Title")
