@@ -36,7 +36,7 @@ exit
   ```
   now login with the created user
   ```
-mysql -uwpuser -hlocalhost wpdb -p
+mysql -u wpuser -hlocalhost wpdb -p
   ```
 you'll need to create two table 
 ```
