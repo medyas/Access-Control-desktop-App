@@ -8,7 +8,8 @@ https://github.com/lthiery/SPI-Py.git
 https://github.com/mxgxw/MFRC522-python.git
 ```
 here is a link on how to install them and setup the RFID reader : http://www.instructables.com/id/RFID-RC522-Raspberry-Pi/
-also you'll need a mysql databse to connect to and get the employees info for display and save the log time for the raspberry Pi 
+also you'll need a mysql databse to connect to and get the employees info for display and save the log time in it.
+to install the MySQL database in raspberry pi and install the python library to communicate with the database copy and past these 2 lines in the terminal and execute them
 ```
 sudo apt-get install mysql-server mysql-client
 sudo pip3 install mysqlclient
