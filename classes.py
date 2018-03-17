@@ -10,20 +10,21 @@ GPIO.setmode(GPIO.BCM)
 
 class Servo:
     def __init__(self, pin):
+        GPIO.setmode(GPIO.BCM)
         self.pin = pin
         GPIO.setup(self.pin, GPIO.OUT)# yellow 
         self.servopwm = GPIO.PWM(self.pin, 50)
         self.servopwm.start(0)
-        self.servopwm.ChangeDutyCycle(2)
+        self.servopwm.ChangeDutyCycle(3)
         
     def setOpen(self):
-        duty = 180 / 18.0 + 2
+        duty = 90 / 18.0 + 2
         GPIO.output(self.pin, True)
         self.servopwm.ChangeDutyCycle(duty)
         sleep(0.0001)
 
     def setClose(self):
-        duty = 0 / 18.0 + 2
+        duty = 0 / 18.0 + 3
         GPIO.output(self.pin, True)
         self.servopwm.ChangeDutyCycle(duty)
         sleep(0.0001)
@@ -32,6 +33,7 @@ class Servo:
 
 class Led:
     def __init__(self, pin):
+        GPIO.setmode(GPIO.BCM)
         self.pin = pin
         GPIO.setup(self.pin, GPIO.OUT)
         GPIO.output(self.pin, GPIO.LOW)

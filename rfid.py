@@ -3,7 +3,7 @@
 
 #from gpiozero import LED
 import RPi.GPIO as GPIO
-import sys, MFRC522, MySQLdb, datetime
+import sys, MFRC522, os
 from time import sleep
 from _thread import start_new_thread
 from classes import Led, Servo, DataBase
@@ -12,21 +12,27 @@ if sys.version_info[0] == 2:
     from Tkinter import *
 else:
     from tkinter import *
+
 from PIL import Image, ImageTk
 
 GPIO.setmode(GPIO.BCM)
 
-
+# create an objects for the different leds
 green = Led(17)
 orange = Led(27)
 red = Led(4)
+
+# create an object for the micro servo
 servo = Servo(2)
 
 continue_reading = True
 top = None
 window = None
 
+# Create an object of the class MFRC522
+MIFAREReader = MFRC522.MFRC522()
 
+# create an object of the database class
 db = DataBase("localhost","rfid","password","userData" )        
         
 # --------------------------------------------------- #
@@ -50,7 +56,7 @@ class Fullscreen_Window(Tk):
         self.sl = ImageTk.PhotoImage(Image.open("/var/www/flask/accessControl/static/imgs/scan.png").resize((400, 300), Image.ANTIALIAS))
         self.scan_logo = Label(self, image=self.sl, background="#006080")
         self.scan_logo.pack()
-        self.scan_logo.place(x=430, y=210)
+        self.scan_logo.place(x=200, y=100)
 
         # developer text
         self.add = Label(self, text="developed by @medyas", font=('courier' , 16 ), background='#006080', anchor='center', height=2, width=33, fg="#4ddbff").pack(side="bottom")
@@ -59,10 +65,13 @@ class Fullscreen_Window(Tk):
         self.toggle_fullscreen()
         self.bind("<F11>", self.toggle_fullscreen)
         self.bind("<Escape>", self.end_fullscreen)
-        self.bind("<q>", self.exit)
+        self.bind("<q>", self.quitLoop)
 
-    def exit(self, e):
-        global db
+    def quitLoop(self, e):
+        global db, servo, continue_reading
+        continue_reading = False
+        servo.setClose()
+        sleep(0.1)
         db.close()
         GPIO.cleanup() 
         self.destroy()
@@ -122,7 +131,8 @@ class window(Toplevel):
 
         # hide the window
         self.withdraw()
-        
+
+    # display the data in the window
     def setData(self, name, address, uid, path, block):
         self.img= ImageTk.PhotoImage(Image.open(path).resize((175, 175), Image.ANTIALIAS))
         self.image.config(image=self.img)
@@ -136,15 +146,8 @@ class window(Toplevel):
 
 # --------------------------------------------------- #
 
-
-# Create an object of the class MFRC522
-MIFAREReader = MFRC522.MFRC522()
-
-
-# --------------------------------------------------- #
-
 def readRFID():
-    global top, db
+    global top, db, servo
     
     # This loop keeps checking for chips. If one is near it will get the UID and authenticate
     while continue_reading:
@@ -167,7 +170,9 @@ def readRFID():
                 data = d[0]
                 name = str(data[1]+", "+data[2])
                 status, start, end = db.check_block(data[0])
+                os.system('killall omxplayer')
                 if(status):
+                    os.system('omxplayer -o local /home/pi/projects/accessControl/beep-09.mp3 &')
                     red.on()
                     block = "Your access has been block from: "+start+" To "+end
                     top.setData(name, data[3], data[0], data[5], block)
@@ -176,6 +181,7 @@ def readRFID():
                     top.withdraw()
                     red.off()
                 else:
+                    os.system('omxplayer -o local /home/pi/projects/accessControl/beep-18.mp3 &')
                     green.on()
                     block = ""
                     top.setData(name, data[3], data[0], data[5], block)
@@ -187,6 +193,7 @@ def readRFID():
                     top.withdraw()
                     servo.setClose()
             else:
+                os.system('omxplayer -o local /home/pi/projects/accessControl/beep-09.mp3 &')
                 red.on()
                 top.setData("Error, Couldn't find the scaned card", "Unknown", "Unknown", "/var/www/flask/accessControl/static/imgs/stop.png", block)
                 top.deiconify()
