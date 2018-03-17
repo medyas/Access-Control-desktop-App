@@ -35,11 +35,15 @@ GRANT ALL PRIVILEGES ON wpdb.* TO 'wpuser'@'localhost';
 FLUSH PRIVILEGES;
 exit
   ```
+  the full database is exported and was added to the desktop app repo, which you can be imported in mysql with :
+```
+gunzip < [dataBase.sql.gz]  | mysql -u [user] -p[password] [databasename] 
+```
   now login with the created user
   ```
 mysql -u wpuser -hlocalhost wpdb -p
   ```
-you'll need to create two table 
+Or, you'll need to create two table 
 ```
 CREATE TABLE `employees` (
   `id` int(8) unsigned NOT NULL AUTO_INCREMENT,
